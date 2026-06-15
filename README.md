@@ -1,45 +1,146 @@
 # Coins — resource pack
 
-Portraits Yasuu19 & DwayneThePhoque pour les items `coins:coin_yasuu19_gold` et `coins:coin_dwaynethephoque_gold`.
+Portraits for Yasuu19, DwayneThePhoque & FroggEater on items `coins:coin_yasuu19_gold`, `coins:coin_dwaynethephoque_gold`, and `coins:coin_froggeater_iron`.
 
-**Minecraft 26.1** (format resource pack **84**) — nécessite aussi le datapack ou plugin qui enregistre ces items.
+**Minecraft 26.1** (resource pack format **84**) — also requires the datapack or plugin that registers these items.
 
 ## Installation
 
-1. Télécharger **`coins-texture.zip`** depuis les [releases GitHub](https://github.com/Enta12/coins-texture/releases) (pas « Source code (zip) »).
-2. Placer le fichier dans `%appdata%\.minecraft\resourcepacks\` **sans l’extraire**.
-3. Activer le pack dans *Options → Packs de ressources*.
+1. Download **`coins-texture.zip`** from the [GitHub releases](https://github.com/Enta12/coins-texture/releases) (not “Source code (zip)”).
+2. Place the file in `%appdata%\.minecraft\resourcepacks\` **without extracting it**.
+3. Enable the pack in *Options → Resource Packs*.
 
-Alternative : utiliser le dossier du pack tel quel dans `resourcepacks/` (racine = `pack.mcmeta`).
+Alternative: use the pack folder as-is in `resourcepacks/` (root must contain `pack.mcmeta`).
 
-## Dossier local vs archive `.zip`
+## Adding a new coin
 
-Le pack fonctionne en **dossier** mais peut échouer en **`.zip`** si l’archive a été créée avec les outils Windows par défaut (Explorateur, « Envoyer vers → Dossier compressé », `Compress-Archive`).
+Each portrait coin needs a matching entry in **both** the datapack (game logic) and this resource pack (texture & model). The `item_model` ID must be identical on both sides.
+
+### 1. Choose an item ID
+
+Follow this naming pattern:
+
+```
+coin_{portrait}_{type}
+```
+
+| Part | Rule | Examples |
+|------|------|----------|
+| `portrait` | Lowercase, no spaces | `yasuu19`, `dwaynethephoque`, `froggeater` |
+| `type` | Coin metal | `gold`, `iron` |
+
+Full ID examples: `coin_yasuu19_gold`, `coin_froggeater_iron`  
+In-game reference: `coins:coin_yasuu19_gold`
+
+### 2. Prepare the texture
+
+- Format: **PNG**, **16×16** pixels (standard Minecraft item size).
+- Save as:
+
+```
+assets/coins/textures/item/coin_{portrait}_{type}.png
+```
+
+Example: `assets/coins/textures/item/coin_froggeater_iron.png`
+
+> The atlas (`assets/coins/atlases/items.json`) already loads every file in `textures/item/` — no change needed there.
+
+### 3. Create the model file
+
+Create `assets/coins/models/item/coin_{portrait}_{type}.json`:
+
+```json
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "coins:item/coin_{portrait}_{type}"
+	}
+}
+```
+
+Example for FroggEater iron:
+
+```json
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "coins:item/coin_froggeater_iron"
+	}
+}
+```
+
+### 4. Create the item definition
+
+Create `assets/coins/items/coin_{portrait}_{type}.json`:
+
+```json
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "coins:item/coin_{portrait}_{type}"
+	}
+}
+```
+
+This file registers the custom item model used by the datapack via `minecraft:item_model`.
+
+### 5. Update the datapack (required)
+
+In the coins datapack, add a `give` rule in `data/coins/function/give.mcfunction` that references the same model ID:
+
+```
+minecraft:item_model="coins:coin_{portrait}_{type}"
+```
+
+Also update `help.mcfunction` and the datapack README with the new portrait and type.
+
+Test in-game:
+
+```
+/function coins:give {count:1,portrait:"FroggEater",type:"iron"}
+```
+
+Without the resource pack, the item keeps the vanilla nugget appearance but still shows the custom name and lore.
+
+### 6. Checklist
+
+| Step | File / action |
+|------|----------------|
+| Texture | `assets/coins/textures/item/coin_….png` |
+| Model | `assets/coins/models/item/coin_….json` |
+| Item | `assets/coins/items/coin_….json` |
+| Datapack | `give.mcfunction` + `help.mcfunction` |
+| Optional | Update `pack.mcmeta` description |
+| Release | Rebuild `coins-texture.zip` (see below) |
+
+## Local folder vs `.zip` archive
+
+The pack works as a **folder** but may fail as a **`.zip`** if the archive was created with default Windows tools (File Explorer, “Send to → Compressed folder”, `Compress-Archive`).
 
 ### Cause
 
-Ces outils mettent des **antislashs** (`\`) dans les chemins du zip :
+These tools put **backslashes** (`\`) in zip paths:
 
 ```
 assets\coins\textures\item\coin_yasuu19_gold.png   ❌
 ```
 
-Minecraft Java attend des **slashs** (`/`) dans les archives :
+Minecraft Java expects **forward slashes** (`/`) in archives:
 
 ```
 assets/coins/textures/item/coin_yasuu19_gold.png   ✅
 ```
 
-| Mode | Comportement |
-|------|----------------|
-| Dossier dans `resourcepacks/` | Windows gère les chemins → OK |
-| Zip avec `\` dans les entrées | Le jeu ne résout pas les chemins → pack cassé ou textures manquantes |
+| Mode | Behavior |
+|------|----------|
+| Folder in `resourcepacks/` | Windows handles paths → OK |
+| Zip with `\` in entries | Game cannot resolve paths → broken pack or missing textures |
 
-Le zip « Source code » des releases GitHub a en plus un sous-dossier (`coins-texture-26.1/`) : inutilisable tel quel comme zip Minecraft. Utiliser l’asset **`coins-texture.zip`**.
+The GitHub “Source code” zip also includes a subfolder (`coins-texture-26.1/`): unusable as a Minecraft zip as-is. Use the **`coins-texture.zip`** release asset instead.
 
-## Créer l’archive pour une release
+## Creating the archive for a release
 
-Depuis la racine du pack (là où se trouve `pack.mcmeta`) :
+From the pack root (where `pack.mcmeta` lives):
 
 ```powershell
 $root = (Get-Location).Path
@@ -64,11 +165,11 @@ Get-ChildItem -Recurse $root -File | Where-Object {
 }
 
 $zip.Dispose()
-Write-Host "Cree : $outZip"
+Write-Host "Created: $outZip"
 ```
 
-Vérifier que les entrées du zip utilisent bien `/` (pas `\`).
+Verify that zip entries use `/` (not `\`).
 
-Avec **7-Zip** : zipper le **contenu** du dossier (`pack.mcmeta`, `assets/`), pas le dossier parent.
+With **7-Zip**: zip the **contents** of the folder (`pack.mcmeta`, `assets/`), not the parent folder.
 
-Puis publier `coins-texture.zip` en asset de release sur GitHub.
+Then publish `coins-texture.zip` as a release asset on GitHub.
