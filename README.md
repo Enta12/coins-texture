@@ -2,7 +2,7 @@
 
 Portraits for Yasuu19, DwayneThePhoque & FroggEater on items `coins:coin_yasuu19_gold`, `coins:coin_yasuu19_netherite`, `coins:coin_dwaynethephoque_gold`, `coins:coin_dwaynethephoque_copper` (unoxidized), `coins:coin_dwaynethephoque_netherite`, `coins:coin_froggeater_iron`, and `coins:coin_froggeater_netherite`.
 
-**Minecraft 26.1** (resource pack format **84**) — also requires the datapack or plugin that registers these items.
+**Minecraft 26.3** (resource pack format **97.1**) — also requires the datapack or plugin that registers these items.
 
 ## Installation
 
@@ -136,7 +136,7 @@ assets/coins/textures/item/coin_yasuu19_gold.png   ✅
 | Folder in `resourcepacks/` | Windows handles paths → OK |
 | Zip with `\` in entries | Game cannot resolve paths → broken pack or missing textures |
 
-The GitHub “Source code” zip also includes a subfolder (`coins-texture-26.1/`): unusable as a Minecraft zip as-is. Use the **`coins-texture.zip`** release asset instead.
+The GitHub “Source code” zip also includes a subfolder (`coins-texture-26.3/`): unusable as a Minecraft zip as-is. Use the **`coins-texture.zip`** release asset instead.
 
 ## Creating the archive for a release
 

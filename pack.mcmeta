@@ -1,7 +1,7 @@
 {
 	"pack": {
-		"min_format": [84, 0],
-		"max_format": [84, 0],
+		"min_format": [97, 1],
+		"max_format": [97, 1],
 		"description": "Coins — Yasuu19, DwayneThePhoque & FroggEater (gold, copper, iron, netherite)"
 	}
 }
