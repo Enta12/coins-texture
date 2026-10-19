@@ -1,6 +1,6 @@
 # Coins — resource pack
 
-Portraits for Yasuu19, DwayneThePhoque & FroggEater on items `coins:coin_yasuu19_gold`, `coins:coin_dwaynethephoque_gold`, and `coins:coin_froggeater_iron`.
+Portraits for Yasuu19, DwayneThePhoque & FroggEater on items `coins:coin_yasuu19_gold`, `coins:coin_dwaynethephoque_gold`, `coins:coin_dwaynethephoque_copper` (unoxidized), and `coins:coin_froggeater_iron`.
 
 **Minecraft 26.1** (resource pack format **84**) — also requires the datapack or plugin that registers these items.
 
@@ -27,7 +27,7 @@ coin_{portrait}_{type}
 | Part | Rule | Examples |
 |------|------|----------|
 | `portrait` | Lowercase, no spaces | `yasuu19`, `dwaynethephoque`, `froggeater` |
-| `type` | Coin metal | `gold`, `iron` |
+| `type` | Coin metal | `gold`, `iron`, `copper` (unoxidized) |
 
 Full ID examples: `coin_yasuu19_gold`, `coin_froggeater_iron`  
 In-game reference: `coins:coin_yasuu19_gold`
